@@ -60,9 +60,9 @@
     <div class="converter">
       <input type="number" id="amount" placeholder="Cantidad">
       <select id="fromCurrency">
-        <option value="USD">USD - Dollar</option>
-        <option value="DOP">DOP - Peso Dominicano</option>
-        <option value="COP">COP - Peso Colombiano</option>
+        <option value="USD">USD</option>
+        <option value="DOP">DOP</option>
+        <option value="COP">COP</option>
       </select>
       <button onclick="convert()">Convertir</button>
     </div>
@@ -74,41 +74,20 @@
       var amount = document.getElementById('amount').value;
       var fromCurrency = document.getElementById('fromCurrency').value;
       
-      // Realiza una llamada a una API para obtener las tasas de conversión actualizadas
-      // Aquí puedes utilizar cualquier API de conversión de moneda, como CurrencyLayer, Fixer.io, etc.
-      // En este ejemplo, se utiliza una tasa de conversión fija para simplificar
+      // Realiza una llamada a la API de ExchangeRate-API para obtener las tasas de conversión actualizadas
+      // Necesitarás un API Key válido para utilizar esta API. Reemplaza "YOUR_API_KEY" con tu clave de API.
+      // Ten en cuenta que esta API tiene limitaciones en su versión gratuita.
       
-      var conversionRates = {
-        USD: { DOP: 54.74, COP: 3712.50 },
-        DOP: { USD: 0.02, COP: 74.01 },
-        COP: { USD: 0.00027, DOP: 0.0135 }
-      };
+      var apiKey = "YOUR_API_KEY";
+      var apiUrl = "https://v6.exchangerate-api.com/v6/" + apiKey + "/latest/" + fromCurrency;
       
-      var countryNames = {
-        USD: "Estados Unidos",
-        DOP: "República Dominicana",
-        COP: "Colombia"
-      };
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          if (data.result === "success") {
+            var conversionRates = data.conversion_rates;
+            var result = '';
       
-      var result = '';
-      
-      for (var currency in conversionRates[fromCurrency]) {
-        var conversionRate = conversionRates[fromCurrency][currency];
-        var convertedAmount = (amount * conversionRate).toFixed(2);
-        result += amountFormat(amount) + ' ' + fromCurrency + ' = ' + amountFormat(convertedAmount) + ' ' + currency + ' (' + countryNames[currency] + ')<br>';
-      }
-      
-      document.getElementById('result').innerHTML = result;
-    }
-    
-    function amountFormat(amount) {
-      // Formatea la cantidad con separadores de decimales y miles
-      
-      var parts = amount.toString().split('.');
-      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-      
-      return parts.join('.');
-    }
-  </script>
-</body>
-</html>
+            for (var currency in conversionRates) {
+              var convertedAmount = (amount * conversionRates[currency]).toFixed(2);
+             
