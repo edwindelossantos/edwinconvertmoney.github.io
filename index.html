@@ -60,9 +60,9 @@
     <div class="converter">
       <input type="number" id="amount" placeholder="Cantidad">
       <select id="fromCurrency">
-        <option value="USD">USD - Dollar</option>
-        <option value="DOP">DOP - Peso Dominicano</option>
-        <option value="COP">COP - Peso Colombiano</option>
+        <option value="DOP">Peso Dominicano (DOP)</option>
+        <option value="USD">Dólar (USD)</option>
+        <option value="COP">Peso Colombiano (COP)</option>
       </select>
       <button onclick="convert()">Convertir</button>
     </div>
@@ -79,7 +79,7 @@
       // Ten en cuenta que esta API tiene limitaciones en su versión gratuita.
       
       var apiKey = "f3194e0175dc72fe0981089e";
-      var apiUrl = "https://v6.exchangerate-api.com/v6/" + apiKey + "/latest/" + (USD,DOP,COP);
+      var apiUrl = "https://v6.exchangerate-api.com/v6/" + apiKey + "/latest/" + fromCurrency;
       
       fetch(apiUrl)
         .then(response => response.json())
