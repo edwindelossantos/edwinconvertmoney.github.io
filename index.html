@@ -78,7 +78,7 @@
       // Necesitarás un API Key válido para utilizar esta API. Reemplaza "YOUR_API_KEY" con tu clave de API.
       // Ten en cuenta que esta API tiene limitaciones en su versión gratuita.
       
-      var apiKey = f3194e0175dc72fe0981089e;
+      var apiKey = "f3194e0175dc72fe0981089e";
       var apiUrl = "https://v6.exchangerate-api.com/v6/" + apiKey + "/latest/" + fromCurrency;
       
       fetch(apiUrl)
@@ -90,4 +90,28 @@
       
             for (var currency in conversionRates) {
               var convertedAmount = (amount * conversionRates[currency]).toFixed(2);
-             
+              result += amountFormat(amount) + ' ' + fromCurrency + ' = ' + amountFormat(convertedAmount) + ' ' + currency + '<br>';
+            }
+      
+            document.getElementById('result').innerHTML = result;
+          } else {
+            document.getElementById('result').innerHTML = "Error al obtener las tasas de conversión.";
+          }
+        })
+        .catch(error => {
+          console.log(error);
+          document.getElementById('result').innerHTML = "Error al obtener las tasas de conversión.";
+        });
+    }
+    
+    function amountFormat(amount) {
+      // Formatea la cantidad con separadores de decimales y miles
+      
+      var parts = amount.toString().split('.');
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      
+      return parts.join('.');
+    }
+  </script>
+</body>
+</html>
