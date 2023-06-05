@@ -60,9 +60,9 @@
     <div class="converter">
       <input type="number" id="amount" placeholder="Cantidad">
       <select id="fromCurrency">
-        <option value="DOP">Peso Dominicano (DOP)</option>
-        <option value="USD">Dólar (USD)</option>
-        <option value="COP">Peso Colombiano (COP)</option>
+        <option value="USD">USD</option>
+        <option value="DOP">DOP</option>
+        <option value="COP">COP</option>
       </select>
       <button onclick="convert()">Convertir</button>
     </div>
@@ -74,34 +74,31 @@
       var amount = document.getElementById('amount').value;
       var fromCurrency = document.getElementById('fromCurrency').value;
       
-      // Realiza una llamada a la API de ExchangeRate-API para obtener las tasas de conversión actualizadas
-      // Necesitarás un API Key válido para utilizar esta API. Reemplaza "YOUR_API_KEY" con tu clave de API.
-      // Ten en cuenta que esta API tiene limitaciones en su versión gratuita.
+      // Realiza una llamada a una API para obtener las tasas de conversión actualizadas
+      // Aquí puedes utilizar cualquier API de conversión de moneda, como CurrencyLayer, Fixer.io, etc.
+      // En este ejemplo, se utiliza una tasa de conversión fija para simplificar
+      // PAGINA DE CONVERSION https://www.xe.com/currencyconverter/
+      var conversionRates = {
+        USD: { DOP: 54.74, COP: 4283.11 },
+        DOP: { USD: 0.0182759, COP: 78.2564 },
+        COP: { USD: 0.000233456, DOP: 0.0127784 }
+      };
       
-      var apiKey = "f3194e0175dc72fe0981089e";
-      var apiUrl = "https://v6.exchangerate-api.com/v6/" + apiKey + "/latest/" + fromCurrency;
+      var countryNames = {
+        USD: "Estados Unidos",
+        DOP: "República Dominicana",
+        COP: "Colombia"
+      };
       
-      fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-          if (data.result === "success") {
-            var conversionRates = data.conversion_rates;
-            var result = '';
+      var result = '';
       
-            for (var currency in conversionRates) {
-              var convertedAmount = (amount * conversionRates[currency]).toFixed(2);
-              result += amountFormat(amount) + ' ' + fromCurrency + ' = ' + amountFormat(convertedAmount) + ' ' + currency + '<br>';
-            }
+      for (var currency in conversionRates[fromCurrency]) {
+        var conversionRate = conversionRates[fromCurrency][currency];
+        var convertedAmount = (amount * conversionRate).toFixed(2);
+        result += amountFormat(amount) + ' ' + fromCurrency + ' = ' + amountFormat(convertedAmount) + ' ' + currency + ' (' + countryNames[currency] + ')<br>';
+      }
       
-            document.getElementById('result').innerHTML = result;
-          } else {
-            document.getElementById('result').innerHTML = "Error al obtener las tasas de conversión.";
-          }
-        })
-        .catch(error => {
-          console.log(error);
-          document.getElementById('result').innerHTML = "Error al obtener las tasas de conversión.";
-        });
+      document.getElementById('result').innerHTML = result;
     }
     
     function amountFormat(amount) {
